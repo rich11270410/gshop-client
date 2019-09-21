@@ -1,4 +1,4 @@
-import Miste from '../pages/Miste/Miste.vue'
+import MSite from '../pages/MSite/MSite.vue'
 import Order from '../pages/Order/Order.vue'
 import Profile from '../pages/Profile/Profile.vue'
 import Search from '../pages/Search/Search.vue'
@@ -6,8 +6,8 @@ import Login from '../pages/Login/Login.vue'
 
 export default [
   {
-    path: '/miste',
-    component: Miste,
+    path: '/msite',
+    component: MSite,
     meta: {
       isShowFooter: true
     }
@@ -39,6 +39,6 @@ export default [
   },
   {
     path: '/',
-    redirect: '/miste'
+    redirect: '/msite'
   }
 ]

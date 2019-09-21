@@ -1,6 +1,6 @@
 <template>
   <footer class="footer_guide border-1px">
-    <span class="guide_item" :class="{on: '/miste'===$route.path}" @click="goto('/miste')">
+    <span class="guide_item" :class="{on: '/msite'===$route.path}" @click="goto('/msite')">
       <span class="item_icon">
         <i class="iconfont icon-waimai"></i>
       </span>
