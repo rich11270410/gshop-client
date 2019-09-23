@@ -11,7 +11,8 @@
     name: 'App',
 
     mounted() {
-      this.$store.dispatch('getAddress')  
+      this.$store.dispatch('getAddress')
+      this.$store.dispatch('autoLogin')  
     },
 
     components: {
