@@ -20,7 +20,7 @@ instance.interceptors.request.use((config) => {
   }
 
   //处理token
-  const token = store.state.token
+  const token = store.state.user.token
 
   //如果token存在   只要浏览器端有token就携带给服务端
   if (token) {

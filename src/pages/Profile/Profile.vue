@@ -1,7 +1,7 @@
 <template>
   <section class="profile">
     <Header title="我 的" />
-    <section class="profile-number" @click="$router.push('/login')">
+    <section class="profile-number" @click="$router.push(user._id ? '/userinfo' : '/login')">
       <a href="javascript:" class="profile-link">
         <div class="profile_image">
           <i class="iconfont icon-person"></i>
@@ -103,7 +103,9 @@
   import {mapState} from 'vuex'
   export default {
     computed: {
-      ...mapState(['user'])
+      ...mapState({
+        user: state => state.user.user
+      })
     },
     methods: {
       //退出登录

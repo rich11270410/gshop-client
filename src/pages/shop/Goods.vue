@@ -57,7 +57,9 @@
     },
 
     computed: {
-      ...mapState(['goods']),
+      ...mapState({
+        goods: state => state.shop.goods
+      }),
       //当前分类的下标
       currentIndex () {
         const {scrollY, tops} = this
@@ -121,10 +123,11 @@
 
         //绑定scrollEnd监听 {x, y}滚动结束的位置坐标
         this.rightScroll.on('scrollEnd', ({x, y}) => {
-          console.log('scroll()', x, y)
+          // console.log('scroll()', x, y)
           //Math.abs() 返回绝对值
           this.scrollY = Math.abs(y)
         })  
+        
       },
 
       //初始化指定tops
@@ -147,7 +150,7 @@
         //得到相应的top
         const top = this.tops[index]
 
-        // 立即将scrollY更新为最终的目标值
+        // 立即将scrollY更新为最终的目标值（当前分类项立即选中）
         this.scrollY = top
 
         //让右侧列表滑动到对应的位置

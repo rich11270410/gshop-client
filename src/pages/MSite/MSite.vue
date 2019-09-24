@@ -66,7 +66,10 @@
 
     computed: {
 
-      ...mapState(['address', 'categorys']),
+      ...mapState({
+        address: state => state.msite.address,
+        categorys: state => state.msite.categorys
+      }),
 
       //分类轮播的二维数组,小数组的长度最长为8
       categorysArr () {

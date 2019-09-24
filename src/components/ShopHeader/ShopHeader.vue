@@ -58,7 +58,7 @@
               <p>评分</p>
             </li>
             <li>
-              <h3>{{info.sellCoun}}单</h3>
+              <h3>{{info.sellCount}}单</h3>
               <p>月售</p>
             </li>
             <li>
@@ -119,7 +119,9 @@
       }
     },
     computed: {
-      ...mapState(['info'])
+      ...mapState({
+        info: state => state.shop.info
+      })
     },
   }
 </script>
