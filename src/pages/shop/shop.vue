@@ -11,8 +11,8 @@
       <div class="tab-item">
         <router-link to="/shop/info" replace>商家</router-link>
       </div>
-      <router-view />
     </div>
+    <router-view />
   </div>
 </template>
 
@@ -20,7 +20,10 @@
 import ShopHeader from '../../components/ShopHeader/ShopHeader'
   export default {
     mounted() {
+      // 将info goods ratings中的数据请求到state中
       this.$store.dispatch('getShopInfo')
+      this.$store.dispatch('getShopGoods')
+      this.$store.dispatch('getShopRatings')
     },
     //注册组件
     components: {

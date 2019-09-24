@@ -1,17 +1,23 @@
 import MSite from '../pages/MSite/MSite.vue'
+import Search from '../pages/Search/Search.vue'
 import Order from '../pages/Order/Order.vue'
 import Profile from '../pages/Profile/Profile.vue'
-import Search from '../pages/Search/Search.vue'
 import Login from '../pages/Login/Login.vue'
-import Shop from '../pages/shop/shop.vue'
-import Goods from '../pages/shop/Goods.vue'
-import Info from '../pages/shop/Info.vue'
-import Ratings from '../pages/shop/Ratings.vue'
+import Shop from '../pages/Shop/Shop.vue'
+import Goods from '../pages/Shop/Goods.vue'
+import Ratings from '../pages/Shop/Ratings.vue'
+import Info from '../pages/Shop/Info.vue'
 
-export default [
-  {
+export default [{
     path: '/msite',
     component: MSite,
+    meta: {
+      isShowFooter: true
+    }
+  },
+  {
+    path: '/search',
+    component: Search,
     meta: {
       isShowFooter: true
     }
@@ -31,31 +37,23 @@ export default [
     }
   },
   {
-    path: '/search',
-    component: Search,
-    meta: {
-      isShowFooter: true
-    }
-  },
-  {
     path: '/login',
     component: Login
   },
   {
     path: '/shop',
     component: Shop,
-    children: [
-      {
-        path: 'goods',
+    children: [{
+        path: '/shop/goods',
         component: Goods
-      },
-      {
-        path: 'info',
-        component: Info
       },
       {
         path: 'ratings',
         component: Ratings
+      },
+      {
+        path: 'info',
+        component: Info
       },
       {
         path: '',
@@ -63,6 +61,7 @@ export default [
       },
     ]
   },
+
   {
     path: '/',
     redirect: '/msite'

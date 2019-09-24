@@ -22,16 +22,20 @@ instance.interceptors.request.use((config) => {
   //处理token
   const token = store.state.token
 
-  if (config.headers.needToken) { //取出needToken,如果为true
-    //如果token存在
-    if (token) {
-      //将token添加到请求头中
-      //config.headers.Authorization = token
-      config.headers['Authorization'] = token
-    } else {
-      throw new Error('没有token, 不发请求') //进入失败流程，不发请求
-    }
+  //如果token存在   只要浏览器端有token就携带给服务端
+  if (token) {
+    //将token添加到请求头中
+    //config.headers.Authorization = token
+    config.headers['Authorization'] = token
+
+  } else {
+    //如果没有token，但请求必须要token
+
+    if (config.headers.checkToken) {
+        throw new Error('没有token, 不发请求') //进入失败流程，不发请求
+    }   
   }
+  
   return config //必须返回config 不然不能发请求
 })
 
@@ -75,8 +79,8 @@ instance.interceptors.response.use(
       
       //其它
       MessageBox('提示', error.message)
-      return new Promise(() => {}) //返回一个pending状态的promise
     }
+      return new Promise(() => {}) //返回一个pending状态的promise
   }
 )
 
