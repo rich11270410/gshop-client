@@ -64,9 +64,11 @@
               </section>
             </section>
           </div>
-          <button class="login_submit" @click.prevent="login">登录</button>
+          <button class="login_submit" @click.prevent="login">{{$t('login_login')}}</button>
         </form>
-        <a href="javascript:;" class="about_us">关于我们</a>
+        <a href="javascript:;" class="about_us">{{$t('login_aboutUs')}}</a>
+        <br>
+        <button class="login_submit" @click.prevent="toggleLocale">切换语言</button>
       </div>
       <a href="javascript:" class="go_back" @click="$router.replace('/profile')">
         <i class="iconfont icon-jiantou2"></i>
@@ -173,6 +175,15 @@
       updateCaptcha () {
         //如何让浏览器对图片重新请求: 图片地址携带一个时间戳（当前时间值）参数
         this.$refs.captcha.src = 'http://localhost:4000/captcha?time=' + Date.now()
+      },
+
+      //切换语言
+      toggleLocale () {
+        const locale = this.$i18n.locale === 'zh_CN' ? 'en' : 'zh_CN'
+
+        this.$i18n.locale = locale
+
+        localStorage.setItem('locale_key', locale)
       }
       
     }

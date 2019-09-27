@@ -13,6 +13,7 @@ import Header from './components/Header/Header.vue'
 import Star from './components/Star/Star.vue'
 import CartControl from './components/CartControl/CartControl.vue'
 import * as API from './api'
+import i18n from './i18n'
 
 
 Vue.use(VueLazyload, { // 内部定义了一个全局指令: lazy
@@ -25,7 +26,7 @@ Vue.config.productionTip = false
 Vue.prototype.$API = API
 
 //注册全局组件标签
-Vue.component('Header', Header) 
+Vue.component('Header', Header)
 Vue.component('Star', Star)
 Vue.component('CartControl', CartControl)
 Vue.component(Button.name, Button)
@@ -35,5 +36,6 @@ Vue.prototype.$eventBus = new Vue()
 new Vue({
   render: h => h(App),
   router,
+  i18n,
   store
 }).$mount('#app')
