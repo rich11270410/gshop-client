@@ -17,7 +17,8 @@
         <li class="food-list-hook" v-for="(good, index) in goods" :key="good.name">
           <h1 class="title">{{good.name}}</h1>
           <ul>
-            <li class="food-item bottom-border-1px" v-for="(food, index) in good.foods" :key="food.name">
+            <li class="food-item bottom-border-1px" v-for="(food, index) in good.foods" 
+            :key="food.name" @click="showFood(food)">
               <div class="icon">
                 <img width="57" height="57" :src="food.icon">
               </div>
@@ -32,7 +33,7 @@
                   <span class="old" v-if="food.oldPrice">￥{{food.oldPrice}}</span>
                 </div>
                 <div class="cartcontrol-wrapper">
-                  CartControl组件
+                  <CartControl :food="food" />
                 </div>
               </div>
             </li>
@@ -40,7 +41,9 @@
         </li>
       </ul>
     </div>
+    <ShopCart/>
   </div>
+  <Food :food="food" ref="food"/>
 </div>
 
 </template>
@@ -48,11 +51,16 @@
 <script type="text/ecmascript-6">
   import BScroll from '@better-scroll/core'
   import {mapState} from 'vuex'
+
+  import Food from '../../components/Food/Food'
+  import ShopCart from '../../components/ShopCart/ShopCart'
+
   export default {
     data () {
       return {
         scrollY: 0, //右侧列表滑动的Y轴坐标，右侧滑动过程中实时更新
-        tops: [] // 右侧所有分类<li></li>的top数组，在列表显示之后更新一次
+        tops: [], // 右侧所有分类<li></li>的top数组，在列表显示之后更新一次
+        food: {} //需要显示的food
       }
     },
 
@@ -65,16 +73,15 @@
         const {scrollY, tops} = this
 
         const index = tops.findIndex((top, index) => scrollY>=top && scrollY<tops[index+1])
-          //如果新的index与保存的index不一样 且this.leftScroll有值（如没值，会报undefind）
-        if (index!==this.index && this.leftScroll) {
-          //保存最新的index
+        // 如果新的index与保存的index不一样
+        if (index!=this.index && this.leftScroll) {
+          // 保存最新的index
           this.index = index
-            // 在当前分类变化时, 让左侧列表滑动到当前分类处
+          // 在当前分类变化时, 让左侧列表滑动到当前分类处
           const li = this.$refs.leftUl.children[index]
-          //scrollToElement  作用： 滚动到指定的目标元素
           this.leftScroll.scrollToElement(li, 300)
         }
-       
+
         return index
       }
     },
@@ -156,9 +163,23 @@
         //让右侧列表滑动到对应的位置
         //scrollTo(x,y,time)
         this.rightScroll.scrollTo(0, -top, 300)
+      },
+
+      //显示指定food
+      showFood (food) {
+        //指定要显示的food
+        this.food = food
+
+        //显示food组件界面
+        this.$refs.food.toggleShow()
       }
 
 
+    },
+
+    components: {
+      Food,
+      ShopCart
     }
   }
 </script>

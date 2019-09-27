@@ -1,9 +1,14 @@
 //对应shop功能模块的配置
+import Vue from 'vue'
+
 import {
   RECEIVE_GOODS,
   RECEIVE_RATINGS,
-  RECEIVE_INFO
-} from '../mutation-types.js'
+  RECEIVE_INFO,
+  ADD_FOOD_COUNT,
+  REDUCE_FOOD_COUNT,
+  CLEAR_CART
+} from '../mutation-types'
 
 import {
   reqGoods,
@@ -14,7 +19,8 @@ import {
 const state ={
   goods: [], //商家列表
   ratings: [], //商家评价列表
-  info: {} //商家信息
+  info: {}, //商家信息
+  cartFoods: [] //购物车中所有food的数组
 }
 
 const mutations = {
@@ -26,6 +32,43 @@ const mutations = {
   },
   [RECEIVE_INFO](state, {info}) {
     state.info = info
+  },
+  [ADD_FOOD_COUNT](state, {food}) {
+    if (!food.count) { //第一次,没有food.count
+      //此时添加属性后不会自动更新界面：新增加的属性没有数据绑定
+      //food.count=1 //给food添加一个新的属性：属性名为count, 值为1
+
+      //解决办法：为响应式对象添加一个属性，确保新属性也是响应式的，并且能够触发视图更新
+      //Vue.set( target, key, value )
+      ////给food添加一个新的属性：属性名为count, 值为1（使新添加的属性实现数据绑定）
+      Vue.set(food, 'count', 1) 
+
+      //将food添加到购物车
+      state.cartFoods.push(food)
+
+    } else {
+      food.count++
+    }
+  },
+  [REDUCE_FOOD_COUNT](state, {food}) {
+    if (food.count > 0) {
+      food.count--
+      if (food.count === 0) {
+        //将food从cardFoods移除
+        state.cartFoods.splice(state.cartFoods.indexOf(food), 1)
+        
+      }
+    }
+  },
+
+  [CLEAR_CART] (state) {
+    // 删除购物车中所有food的count属性
+    state.cartFoods.forEach(food => {
+      food.count = 0
+      // delete food.count
+    })
+    //清除购物车数组中的foods
+    state.cartFoods = []
   }
 }
 
@@ -35,9 +78,7 @@ const actions = {
       const result = await reqInfo()
       if (result.code === 0) {
         const info = result.data
-        commit(RECEIVE_INFO, {
-          info
-        })
+        commit(RECEIVE_INFO, {info})
 
         cb && cb()
       }
@@ -48,9 +89,7 @@ const actions = {
       const result = await reqRatings()
       if (result.code === 0) {
         const ratings = result.data
-        commit(RECEIVE_RATINGS, {
-          ratings
-        })
+        commit(RECEIVE_RATINGS, {ratings})
 
         cb && cb()
       }
@@ -61,17 +100,43 @@ const actions = {
     const result = await reqGoods()
     if (result.code === 0) {
       const goods = result.data
-      commit(RECEIVE_GOODS, {
-        goods
-      })
+      commit(RECEIVE_GOODS, {goods})
       // 如果组件中传递了接收消息的回调函数, 数据更新后, 调用回调通知调用的组件
       cb && cb()
+    }
+  },
+
+  //更新food数量的同步action
+  updateFoodCount ({commit}, {isAdd, food}) {
+    if (isAdd) {
+      commit(ADD_FOOD_COUNT, {food})
+    } else {
+      commit(REDUCE_FOOD_COUNT, {food})
     }
   }
 }
 
 const getters = {
 
+  //计算总数量
+  totalCount (state) {
+    return state.cartFoods.reduce((pre, food) => pre + food.count, 0)
+  },
+
+  //计算总价
+  totalPrice (state) {
+    return state.cartFoods.reduce((pre, food) => pre + food.count * food.price, 0)
+  },
+
+  //计算总评论数
+  totalRatings (state) {
+    return state.ratings.length
+  },
+
+  //计算总商家评论数
+  recommendRatings (state) {
+    return state.ratings.reduce((pre, rating) => pre + (rating.rateType === 0 ? 1 : 0), 0)
+   }
 }
 
 export default {
